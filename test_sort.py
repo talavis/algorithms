@@ -12,6 +12,7 @@ import random
 import insertion_sort as ins_sort
 import merge_sort as mer_sort
 import selection_sort as sel_sort
+import bubble_sort as bub_sort
 
 values = list(range({}))
 random.shuffle(values)
@@ -22,5 +23,7 @@ random.shuffle(values)
     run = timeit.timeit('sel_sort.selection_sort(values)', setup=setup, number=1)
     print('Selection sort: {}'.format(run))
     run = timeit.timeit('mer_sort.merge_sort(values)', setup=setup, number=1)
+    print('Merge sort: {}'.format(run))
+    run = timeit.timeit('bub_sort.bubble_sort(values)', setup=setup, number=1)
     print('Merge sort: {}'.format(run))
 
