@@ -25,5 +25,5 @@ random.shuffle(values)
     run = timeit.timeit('mer_sort.merge_sort(values)', setup=setup, number=1)
     print('Merge sort: {}'.format(run))
     run = timeit.timeit('bub_sort.bubble_sort(values)', setup=setup, number=1)
-    print('Merge sort: {}'.format(run))
+    print('Bubble sort: {}'.format(run))
 
