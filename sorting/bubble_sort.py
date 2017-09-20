@@ -3,13 +3,16 @@
 Bubble sort
 '''
 
-def bubble_sort(values) :
+def bubble_sort(values):
     '''
     Bubble sort
     '''
-    for i in range(len(values)-1):
-        for j in range(len(values)-1, i, -1):
-            if values[j] < values[j-1]:
+    swap = False
+    while not swap:
+        swap = True
+        for j in range(1, len(values)):
+            if values[j-1] > values[j]:
+                swap = False
                 tmp = values[j]
                 values[j] = values[j-1]
                 values[j-1] = tmp
