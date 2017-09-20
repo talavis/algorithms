@@ -1,116 +1,148 @@
 #!/usr/bin/env python3
-
 '''
 Merge sort
 '''
 
 
-def merge(A, p, q, r):
-    n1 = q-p+1
-    n2 = r-q
+def merge(values, low, mid, high):
+    '''
+    Merge sort
+    '''
+    len1 = mid-low+1
+    len2 = high-mid
 
-    L = [0] * (n1+1)
-    R = [0] * (n2+1)
+    left = [0] * (len1+1)
+    right = [0] * (len2+1)
 
-    for i in range(n1):
-        L[i] = A[p+i]
-    for j in range(n2):
-        R[j] = A[q+j+1]
-    sentinel = max(A)+1
-    L[n1] = sentinel
-    R[n2] = sentinel
+    for i in range(len1):
+        left[i] = values[low+i]
+    for j in range(len2):
+        right[j] = values[mid+j+1]
+    sentinel = max(values)+1
+    left[len1] = sentinel
+    right[len2] = sentinel
     i = 0
     j = 0
-    for k in range(p, r+1):
-        if L[i] <= R[j]:
-            A[k] = L[i]
+    for k in range(low, high+1):
+        if left[i] <= right[j]:
+            values[k] = left[i]
             i += 1
         else:
-            A[k] = R[j]
+            values[k] = right[j]
             j += 1
 
 
 def test_merge():
-    A = [1,7,9,3,5,0,2,4,6,8]
-    p = 0
-    q = 2
-    r = 4
-    merge(A, p, q, r)
-    assert A == [1,3,5,7,9,0,2,4,6,8]
-    A = [1,7,9,3,5,0,2,4,6,8]
-    p = 3
-    q = 4
-    r = 5
-    merge(A, p, q, r)
-    assert A == [1,7,9,0,3,5,2,4,6,8]
-
-
-def merge_alt(A, p, q, r):
     '''
-    Alternative version of merge, using no sentinels
+    Test merge_sort()
     '''
-    n1 = q-p+1
-    n2 = r-q
+    values = [1, 7, 9, 3, 5, 0, 2, 4, 6, 8]
+    low = 0
+    mid = 2
+    high = 4
+    merge(values, low, mid, high)
+    assert values == [1, 3, 5, 7, 9, 0, 2, 4, 6, 8]
+    values = [1, 7, 9, 3, 5, 0, 2, 4, 6, 8]
+    low = 3
+    mid = 4
+    high = 5
+    merge(values, low, mid, high)
+    assert values == [1, 7, 9, 0, 3, 5, 2, 4, 6, 8]
 
-    L = [0] * (n1)
-    R = [0] * (n2)
 
-    for i in range(n1):
-        L[i] = A[p+i]
-    for j in range(n2):
-        R[j] = A[q+j+1]
+def merge_alt(values, low, mid, high):
+    '''
+    valueslternative version of merge, using no sentinels
+    '''
+    len1 = mid-low+1
+    len2 = high-mid
+
+    left = [0] * (len1)
+    right = [0] * (len2)
+
+    for i in range(len1):
+        left[i] = values[low+i]
+    for j in range(len2):
+        right[j] = values[mid+j+1]
     i = 0
     j = 0
-    for k in range(p, r+1):
-        if L[i] <= R[j]:
-            A[k] = L[i]
+    for k in range(low, high+1):
+        if left[i] <= right[j]:
+            values[k] = left[i]
             i += 1
-            if i == n1:
-                A[k+1:r+1] = R[j:]
+            if i == len1:
+                values[k+1:high+1] = right[j:]
                 break
         else:
-            A[k] = R[j]
+            values[k] = right[j]
             j += 1
-            if j == n2:
-                A[k+1:r+1] = L[i:]
+            if j == len2:
+                values[k+1:high+1] = left[i:]
                 break
 
 
 def test_merge_alt():
-    A = [1,7,9,3,5,0,2,4,6,8]
-    p = 0
-    q = 2
-    r = 4
-    merge_alt(A, p, q, r)
-    assert A == [1,3,5,7,9,0,2,4,6,8]
-    A = [1,7,9,3,5,0,2,4,6,8]
-    p = 3
-    q = 4
-    r = 5
-    merge_alt(A, p, q, r)
-    assert A == [1,7,9,0,3,5,2,4,6,8]
+    '''
+    Test merge_alt()
+    '''
+    values = [1, 7, 9, 3, 5, 0, 2, 4, 6, 8]
+    low = 0
+    mid = 2
+    high = 4
+    merge_alt(values, low, mid, high)
+    assert values == [1, 3, 5, 7, 9, 0, 2, 4, 6, 8]
+    values = [1, 7, 9, 3, 5, 0, 2, 4, 6, 8]
+    low = 3
+    mid = 4
+    high = 5
+    merge_alt(values, low, mid, high)
+    assert values == [1, 7, 9, 0, 3, 5, 2, 4, 6, 8]
 
 
-def merge_helper(A, p, r):
-    if p < r:
-        q = (p+r)//2
-        merge_helper(A, p, q)
-        merge_helper(A, q+1, r)
-        merge(A, p, q, r)
+def merge_sort(values):
+    '''
+    Recursive version of merge sort
+    '''
+    def merge_helper(values, low, high):
+        '''
+        Merge sort helper
+        '''
+        if low < high:
+            mid = (low + high)//2
+            merge_helper(values, low, mid)
+            merge_helper(values, mid+1, high)
+            merge(values, low, mid, high)
+
+    merge_helper(values, 0, len(values)-1)
 
 
-def merge_sort(A):
-    merge_helper(A, 0, len(A)-1)
-
-
-def test_merge_sort():
+def general_test(sort_func):
+    '''
+    General function for testing sorts
+    '''
     import random
 
-    A = [4, 0, 3, 2, 1]
-    merge_sort(A)
-    assert A == sorted(A)
+    testdata = [4, 0, 3, 2, 1]
+    sort_func(testdata)
+    if not testdata == sorted(testdata):
+        return False
 
-    A = list(range(1000))
-    random.shuffle(A)
-    merge_sort(A)
-    assert A == sorted(A)
+    testdata = list(range(1000))
+    random.shuffle(testdata)
+    sort_func(testdata)
+    if not testdata == sorted(testdata):
+        return False
+
+    testdata = list(range(500))*2
+    random.shuffle(testdata)
+    sort_func(testdata)
+    if not testdata == sorted(testdata):
+        return False
+    return True
+
+
+def test_merge_sort_rec():
+    '''
+    Test merge_sort_rec()
+    '''
+    assert general_test(merge_sort)
