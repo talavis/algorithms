@@ -7,25 +7,23 @@ class Percolate:
         self._side = side
         self._square = side**2
         self._parents = list(range(self._square + 2))
-        self._open = [False] * (self._square + 2)
-        self._open[-1] = True  # "top"
-        self._open[-2] = True  # "bottom"
+        self._closed = set(range(self._square))
         self._size = [1] * (self._square + 2)
 
     def frac_open(self):
-        return 1 - (sum(self._open) - 2) / (len(self._parents) - 2)
+        return 1-len(self._closed) / self._square
 
     def open(self, choice):
-        if self._open[choice]:
+        if choice not in self._closed:
             return
-        self._open[choice] = True
+        self._closed.remove(choice)
         for direction in (-self._side, -1, 1, self._side):
             new_pos = choice + direction
             if new_pos < 0:
-                new_pos = -2
+                new_pos = self._square
             elif new_pos >= self._square:
-                new_pos = -1
-            if self._open[new_pos]:
+                new_pos = self._square + 1
+            if new_pos not in self._closed:
                 self._union(choice, new_pos)
 
     def _union(self, p, q):
@@ -50,14 +48,14 @@ class Percolate:
         return self._root(p) == self._root(q)
 
     def percolates(self):
-        return self.connected(-2, -1)
+        return self.connected(self._square, self._square+1)
 
 
 if __name__ == "__main__":
-    coeffs = []
-    sides = [10, 20, 40, 80, 160, 320]
+    sides = [10, 20, 40, 80, 160, 320, 640, 1280, 2560]
     for side in sides:
-        for i in range(100):
+        coeffs = []
+        for i in range(10):
             entries = list(range(side**2))
             random.shuffle(entries)
             perc = Percolate(side)
@@ -65,7 +63,7 @@ if __name__ == "__main__":
             now = time.time()
             while not perc.percolates():
                 perc.open(entries.pop())
-                coeffs.append(perc.frac_open())
+            coeffs.append(perc.frac_open())
             done = time.time()
             t_total += done - now
-        print(f"Size: {side} Time: {t_total:.2} s Value: {sum(coeffs)/len(coeffs)}")
+        print(f"Size: {side} Time: {t_total:.3} s Value: {sum(coeffs)/len(coeffs):.4}")
