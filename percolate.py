@@ -55,7 +55,7 @@ if __name__ == "__main__":
     sides = [10, 20, 40, 80, 160, 320, 640, 1280, 2560]
     for side in sides:
         coeffs = []
-        for i in range(10):
+        for i in range(20):
             entries = list(range(side**2))
             random.shuffle(entries)
             perc = Percolate(side)
